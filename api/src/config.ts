@@ -33,7 +33,7 @@ export const config = {
     } as S3StorageOptions,
   },
   schemaRequired: process.env.SCHEMA_REQUIRED || false,
-  jwtKey: 'v3rys3cr3tK3y',
+  jwtKey: process.env.JWT_KEY || 'v3rys3cr3tK3y',
   authz: {
     readScope: _.split(process.env.JWT_READ_SCOPE || 'filebank:read', ','),
     writeScope: _.split(process.env.JWT_WRITE_SCOPE || 'filebank:write', ','),
