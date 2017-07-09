@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "metaField": {
+      "type": "boolean"
+    },
+    "deepMeta": {
+      "type": "object",
+      "properties": {
+        "thing": {
+          "type": "number"
+        },
+        "third": {
+          "type": "string"
+        }
+      },
+      "required": ["thing", "third"]
+    }
+  },
+  "required": ["metaField", "deepMeta"]
+}
