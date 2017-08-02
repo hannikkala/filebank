@@ -18,6 +18,10 @@ const router: express.Router = express.Router();
 const storage = transportFactory.getInstance();
 const upload = multer();
 
+const nop = (req: express.Request, res:  express.Response, next: express.NextFunction) => {
+  next();
+};
+
 const handleFileUpload = async function (req: express.Request, res: express.Response, currentDir: DirectoryModel|undefined) {
   let metadata = {};
   try {
@@ -41,7 +45,7 @@ const handleFileUpload = async function (req: express.Request, res: express.Resp
   res.send(mongoFile);
 };
 
-router.get(['/', '/*'], jwt, jwtAuthz(config.authz.readScope), async (req: express.Request, res: express.Response) => {
+router.get(['/', '/*'], config.authz.enabled ? jwt : nop, config.authz.enabled ? jwtAuthz(config.authz.readScope) : nop, async (req: express.Request, res: express.Response) => {
   try {
     const pathObj = await PathService.parsePath(req.params[0] || '/', true).populate();
     switch (pathObj.current ? pathObj.current.type : ItemType.Directory) {
@@ -62,7 +66,7 @@ router.get(['/', '/*'], jwt, jwtAuthz(config.authz.readScope), async (req: expre
   }
 });
 
-router.put('/:id\.meta', jwt, jwtAuthz(config.authz.writeScope), async (req: express.Request, res: express.Response) => {
+router.put('/:id\.meta', config.authz.enabled ? jwt : nop, config.authz.enabled ? jwtAuthz(config.authz.writeScope): nop, async (req: express.Request, res: express.Response) => {
   try {
     const [dir, file] = await Bluebird.all([
       models.Directory.findById(req.params.id).exec(),
@@ -101,7 +105,7 @@ router.put('/:id\.meta', jwt, jwtAuthz(config.authz.writeScope), async (req: exp
   }
 });
 
-router.post(['/', '/*'], jwt, jwtAuthz(config.authz.writeScope), upload.single('file'), async (req: express.Request, res: express.Response) => {
+router.post(['/', '/*'], config.authz.enabled ? jwt : nop, config.authz.enabled ? jwtAuthz(config.authz.writeScope) : nop, upload.single('file'), async (req: express.Request, res: express.Response) => {
   const path: string[] = _.filter((req.params[0] || '').split('/'), part => !_.isEmpty(part));
 
   try {
@@ -145,7 +149,7 @@ router.post(['/', '/*'], jwt, jwtAuthz(config.authz.writeScope), upload.single('
   }
 });
 
-router.put(['/', '/*'], jwt, jwtAuthz(config.authz.writeScope), async (req: express.Request, res: express.Response) => {
+router.put(['/', '/*'], config.authz.enabled ? jwt : nop, config.authz.enabled ? jwtAuthz(config.authz.writeScope) : nop, async (req: express.Request, res: express.Response) => {
   if (!req.body.target) {
     res.status(400).send('Missing target parameter.');
     return;
@@ -196,7 +200,7 @@ router.put(['/', '/*'], jwt, jwtAuthz(config.authz.writeScope), async (req: expr
   }
 });
 
-router.delete(['/', '/*'], jwt, jwtAuthz(config.authz.deleteScope), async (req: express.Request, res: express.Response) => {
+router.delete(['/', '/*'], config.authz.enabled ? jwt : nop, config.authz.enabled ? jwtAuthz(config.authz.deleteScope) : nop, async (req: express.Request, res: express.Response) => {
   const path: string[] = _.filter((req.params[0] || '').split('/'), part => !_.isEmpty(part));
 
   try {

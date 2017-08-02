@@ -32,9 +32,10 @@ export const config = {
       bucket: process.env.S3_STORAGE_BUCKET || 'filebank',
     } as S3StorageOptions,
   },
-  schemaRequired: process.env.SCHEMA_REQUIRED || false,
+  schemaRequired: !!process.env.SCHEMA_REQUIRED,
   jwtKey: process.env.JWT_KEY || 'v3rys3cr3tK3y',
   authz: {
+    enabled: process.env.JWT_ENABLED === '' ? true : process.env.JWT_ENABLED as any == true,
     readScope: _.split(process.env.JWT_READ_SCOPE || 'filebank:read', ','),
     writeScope: _.split(process.env.JWT_WRITE_SCOPE || 'filebank:write', ','),
     deleteScope: _.split(process.env.JWT_DELETE_SCOPE || 'filebank:delete', ','),
