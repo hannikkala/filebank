@@ -31,7 +31,7 @@ const handleFileUpload = async function (req: express.Request, res: express.Resp
   }
   const fileObject = {
     metadata,
-    mimetype: req.body.mimetype || req.file.mimetype,
+    mimetype: req.body.mimetype || req.file ? req.file.mimetype : 'application/octet-stream',
     name: req.body.name || req.file.originalname,
     type: 'file',
     refId: '',
@@ -114,6 +114,10 @@ router.post(['/', '/*'], config.authz.enabled ? jwt : nop, config.authz.enabled 
 
     if (config.schemaRequired && !req.body.schema) {
       throw new UserInputError('Schema parameter is required.');
+    }
+
+    if (!req.body.type) {
+      req.body.type = req.file ? 'file' : 'directory';
     }
 
     switch (req.body.type) {

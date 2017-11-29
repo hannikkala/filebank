@@ -64,7 +64,7 @@ const fileSchema = {
   required: ['name', 'type', 'mimetype'],
 };
 
-export const validateFile = (schema: string, obj: any): ErrorObject[]|undefined => {
+export const validateFile = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = fileSchema;
   schemaObj.properties.metadata = schema ? fileSchemas[schema] : fileSchemas['Default'];
   const ajvInstance = new ajv({ allErrors: true });
@@ -73,7 +73,7 @@ export const validateFile = (schema: string, obj: any): ErrorObject[]|undefined 
   return validate.errors;
 };
 
-export const validateDirectory = (schema: string, obj: any): ErrorObject[]|undefined => {
+export const validateDirectory = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = directorySchema;
   schemaObj.properties.metadata = schema ? directorySchemas[schema] : directorySchemas['Default'];
   const ajvInstance = new ajv({ allErrors: true });
@@ -82,7 +82,7 @@ export const validateDirectory = (schema: string, obj: any): ErrorObject[]|undef
   return validate.errors;
 };
 
-export const validateFileMeta = (schema: string, obj: any): ErrorObject[]|undefined => {
+export const validateFileMeta = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = schema ? fileSchemas[schema] : fileSchemas['Default'];
   const ajvInstance = new ajv({ allErrors: true });
   const validate: ValidateFunction = ajvInstance.compile(schemaObj);
@@ -90,7 +90,7 @@ export const validateFileMeta = (schema: string, obj: any): ErrorObject[]|undefi
   return validate.errors;
 };
 
-export const validateDirectoryMeta = (schema: string, obj: any): ErrorObject[]|undefined => {
+export const validateDirectoryMeta = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = schema ? directorySchemas[schema] : directorySchemas['Default'];
   const ajvInstance = new ajv({ allErrors: true });
   const validate: ValidateFunction = ajvInstance.compile(schemaObj);

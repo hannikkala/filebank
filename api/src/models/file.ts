@@ -29,6 +29,11 @@ const fileSchema = new mongoose.Schema({
     type: String,
     default: ItemType.Directory,
   },
+  version: {
+    type: Number,
+    default: 1,
+    required: true,
+  },
 });
 
 export const file = mongoose.model<FileModel>('File', fileSchema);
