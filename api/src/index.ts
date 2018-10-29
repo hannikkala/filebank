@@ -1,5 +1,3 @@
-import * as Promise from 'bluebird';
-
 export interface FileStorage {
   mkdir(dirRef: string, dir: Directory): Promise<Directory>;
 

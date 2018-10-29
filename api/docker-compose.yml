@@ -1,8 +1,8 @@
-version: '2.1'
+version: '3.3'
 services:
   filebank:
     build: .
-    image: filebank
+    image: hannikkala/filebank
     environment:
       - MONGODB_URL=mongodb://mongo:27017/filebank
     ports:

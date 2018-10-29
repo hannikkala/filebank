@@ -4,7 +4,8 @@ declare module "is-invalid-path" {
 }
 
 declare module "express-jwt-authz" {
-  import express = require('express');
-  function expressJwtAuthz(expectedScopes: string[]): express.RequestHandler;
+    import express = require('express');
+
+    function expressJwtAuthz(expectedScopes: string[]): express.RequestHandler;
   export = expressJwtAuthz;
 }

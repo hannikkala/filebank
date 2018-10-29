@@ -1,9 +1,7 @@
 require('clear-require').all();
 
-const s3creds = require('../../../../awscredentials.json');
 const config = require('../../dist/config').config;
 config.storage.s3.enabled = true;
-config.storage.s3.clientOptions = s3creds;
 config.storage.s3.bucket = 'test-bucket-for-stuff';
 config.storage.enabled = 's3';
 const AWS = require('aws-sdk');

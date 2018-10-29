@@ -1,4 +1,3 @@
-import express = require('express');
 import ajv = require('ajv');
 import { ErrorObject, ValidateFunction } from 'ajv';
 import * as glob from 'glob';

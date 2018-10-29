@@ -2,13 +2,12 @@ import * as express from 'express';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as Promise from 'bluebird';
+import { config } from './config';
+import * as dirs from './routes/directory';
 import morgan = require('morgan');
 import mongoose = require('mongoose');
-import { config } from './config';
 
 mongoose.Promise = Promise;
-
-import * as dirs from './routes/directory';
 
 const app: express.Express = express();
 
@@ -39,7 +38,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.send(res.locals);
 });
 
-mongoose.connect(config.mongoDbUrl, (err) => {
+mongoose.connect(config.mongoDbUrl, { useNewUrlParser: true }, (err) => {
   if (err) {
     console.error(err);
     process.exit(1);
