@@ -17,7 +17,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~4.1.0",
     "express": "~4.16.4",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^6.0.0",
     "express-jwt-authz": "^1.0.0",
     "fs-extra": "^3.0.1",
     "glob": "^7.1.2",
