@@ -22,7 +22,7 @@
     "fs-extra": "^9.0.1",
     "glob": "^7.1.2",
     "is-invalid-path": "^0.1.0",
-    "jsonschema": "^1.1.1",
+    "jsonschema": "^1.2.7",
     "lodash": "^4.17.19",
     "mongoose": "^5.7.5",
     "morgan": "~1.9.1",
