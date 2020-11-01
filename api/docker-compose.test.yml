@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  filebank:
+    command: npm test
+
+  mongo:
+    ports:
+    - 27017:27017
+
+  localstack:
+    image: localstack/localstack-light
+    environment:
+      SERVICES: s3
+      DEFAULT_REGION: eu-west-1
+    ports:
+    - 4566:4566

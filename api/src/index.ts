@@ -1,3 +1,5 @@
+import { Directory } from "./models";
+
 export interface FileStorage {
   mkdir(dirRef: string, dir: Directory): Promise<Directory>;
 
@@ -11,7 +13,16 @@ export interface FileStorage {
 
   moveFile(item: File, destination: Directory): Promise<File>;
 
-  moveDirectory(dir: Directory, destination: Directory, refCb: (oldItem: Item, newItem: Item) => Promise<void>): Promise<Directory>;
+  moveDirectory(dir: Directory, destination: Directory): Promise<MoveDirectoryResponse>;
+}
+
+export type MoveDirectoryResponse = {
+  directory: Directory;
+  items:
+    {
+      oldItem: Item;
+      newItem: Item;
+    }[];
 }
 
 export enum ItemType {

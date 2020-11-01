@@ -1,4 +1,4 @@
-import { Item, ItemType } from '../..';
+import { ItemType } from '../../index';
 import * as fs from 'fs';
 import { FilesystemStorage } from '../../transport/filesystem';
 
@@ -11,18 +11,14 @@ process.env.FILESYSTEM_STORAGE_ROOT = filesystemstorageroot;
 const filesystem = new FilesystemStorage(filesystemstorageroot);
 
 beforeAll(async () => {
-  if (fs.existsSync(filesystemstorageroot)) {
-    helpers.deleteFolderRecursive(filesystemstorageroot);
-    fs.mkdirSync(filesystemstorageroot);
-  }
+  helpers.deleteFolderRecursive(filesystemstorageroot);
+  fs.mkdirSync(filesystemstorageroot);
 
   filesystem.setRootDir(filesystemstorageroot);
 });
 
 afterAll(async () => {
-  if (fs.existsSync(filesystemstorageroot)) {
-    helpers.deleteFolderRecursive(filesystemstorageroot);
-  }
+  helpers.deleteFolderRecursive(filesystemstorageroot);
 });
 
 describe('Filesystem storage', () => {
@@ -131,8 +127,7 @@ describe('Filesystem storage', () => {
     await filesystem.mkdir('dirmovefrom', { name: 'sub1', refId: 'dirmovefrom/sub1', type: ItemType.Directory });
     await filesystem.createFile({ refId: 'mvfile.txt', name: 'dirmovefrom/mvfile.txt', type: ItemType.File }, undefined, new Buffer('testtesttest'));
     await filesystem.mkdir('', { name: 'dirmoveto', refId: 'dirmoveto', type: ItemType.Directory });
-    await filesystem.moveDirectory(from, { name: 'dirmovefrom', refId: 'dirmoveto/dirmovefrom', type: ItemType.Directory },
-                                   async (old: Item, newItem: Item) => console.log(old, newItem));
+    await filesystem.moveDirectory(from, { name: 'dirmovefrom', refId: 'dirmoveto/dirmovefrom', type: ItemType.Directory });
   });
 
 });

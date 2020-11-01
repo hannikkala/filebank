@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import { DirectoryModel } from '../models/directory';
 import { FileModel } from '../models/file';
-import models from '../models';
-import DirectoryService = require('./DirectoryService');
-import isInvalidPath = require('is-invalid-path');
+import * as models from '../models/index';
+import * as DirectoryService from './DirectoryService';
+import isInvalidPath from 'is-invalid-path';
 
 class Path {
   private allowRoot: boolean;
@@ -66,8 +66,4 @@ class Path {
   }
 }
 
-export = {
-  parsePath: (path: string, allowRoot: boolean = false): Path => {
-    return new Path(path, allowRoot);
-  },
-};
+export const parsePath = (path: string, allowRoot: boolean = false): Path => new Path(path, allowRoot);

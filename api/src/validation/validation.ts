@@ -1,10 +1,10 @@
-import ajv = require('ajv');
-import { ErrorObject, ValidateFunction } from 'ajv';
-import * as glob from 'glob';
-import * as path from 'path';
+import ajv, { ErrorObject, ValidateFunction } from 'ajv';
+import glob from 'glob';
+import { omit } from 'lodash';
+import path from 'path';
 
-const fileSchemas = {} as any;
-const directorySchemas = {} as any;
+const fileSchemas = {} as Schemas;
+const directorySchemas = {} as Schemas;
 
 glob(`${__dirname}/../../schemas/file/*.json`, (err, files) => {
   if (err) throw err;
@@ -20,7 +20,18 @@ glob(`${__dirname}/../../schemas/directory/*.json`, (err, files) => {
   });
 });
 
-const directorySchema = {
+type Schema = {
+  id: string,
+  type: string,
+  properties: { [key: string]: any },
+  required: Array<string>
+}
+
+type Schemas = {
+  [ key: string ]: Schema
+};
+
+const directorySchema: Schema = {
   id: 'Directory',
   type: 'object',
   properties: {
@@ -40,7 +51,7 @@ const directorySchema = {
   required: ['name', 'type'],
 };
 
-const fileSchema = {
+const fileSchema: Schema = {
   id: 'File',
   type: 'object',
   properties: {
@@ -63,38 +74,33 @@ const fileSchema = {
   required: ['name', 'type', 'mimetype'],
 };
 
+const validateFn = (schema: Schema, obj: any): ErrorObject[] | undefined | null => {
+  const ajvInstance = new ajv({ allErrors: true });
+  const validate: ValidateFunction = ajvInstance.compile(omit(schema, 'id'));
+  validate(obj);
+  return validate.errors;
+}
+
 export const validateFile = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = fileSchema;
   schemaObj.properties.metadata = schema ? fileSchemas[schema] : fileSchemas['Default'];
-  const ajvInstance = new ajv({ allErrors: true });
-  const validate: ValidateFunction = ajvInstance.compile(schemaObj);
-  validate(obj);
-  return validate.errors;
+  return validateFn(schemaObj, obj);
 };
 
 export const validateDirectory = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = directorySchema;
   schemaObj.properties.metadata = schema ? directorySchemas[schema] : directorySchemas['Default'];
-  const ajvInstance = new ajv({ allErrors: true });
-  const validate: ValidateFunction = ajvInstance.compile(schemaObj);
-  validate(obj);
-  return validate.errors;
+  return validateFn(schemaObj, obj);
 };
 
 export const validateFileMeta = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = schema ? fileSchemas[schema] : fileSchemas['Default'];
-  const ajvInstance = new ajv({ allErrors: true });
-  const validate: ValidateFunction = ajvInstance.compile(schemaObj);
-  validate(obj);
-  return validate.errors;
+  return validateFn(schemaObj, obj);
 };
 
 export const validateDirectoryMeta = (schema: string, obj: any): ErrorObject[]|undefined|null => {
   const schemaObj = schema ? directorySchemas[schema] : directorySchemas['Default'];
-  const ajvInstance = new ajv({ allErrors: true });
-  const validate: ValidateFunction = ajvInstance.compile(schemaObj);
-  validate(obj);
-  return validate.errors;
+  return validateFn(schemaObj, obj);
 };
 /*export const expressValidator = (schema: string) => {
   return (req: express.Request, res: express.Response, next: express.NextFunction): void => {

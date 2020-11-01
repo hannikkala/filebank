@@ -1,4 +1,4 @@
-import mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 import { Directory, File, ItemType } from '../index';
 
 export interface FileModel extends File, mongoose.Document {

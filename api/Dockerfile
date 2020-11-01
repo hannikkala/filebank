@@ -8,8 +8,8 @@ COPY *.json /data/app/
 COPY schemas /data/app/schemas/
 COPY src /data/app/src/
 
-RUN yarn install
-RUN yarn run build
-RUN yarn run lint
+RUN npm install
+RUN npm run build
+RUN npm run lint
 
 CMD node bin/www
