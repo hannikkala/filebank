@@ -8,6 +8,7 @@ import { Directory, File } from "../../../models";
 import * as helpers from "../../helpers";
 import { deleteDirectory, deleteFile, expectStatus, expectStatus200, fileVerifyFS, postDirectoryRequest, postFileRequest } from "../../helpers";
 import fs from "fs";
+import mongoose from "mongoose";
 
 beforeAll(() => {
   helpers.deleteFolderRecursive(filesystemstorageroot);
@@ -21,6 +22,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   helpers.deleteFolderRecursive(filesystemstorageroot);
+  await Promise.all(mongoose.connections.map(conn => conn.close()));
 });
 
 describe('Directory FS API route DELETE route', () => {

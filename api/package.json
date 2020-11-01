@@ -5,9 +5,12 @@
   "scripts": {
     "start": "node ./bin/www",
     "build": "rm -rf dist/ && ./node_modules/.bin/tsc",
-    "lint": "./node_modules/.bin/tslint -p .",
+    "lint": "./node_modules/.bin/eslint src --ext .ts",
     "cover": "./node_modules/.bin/nyc npm test",
-    "test": "jest --testTimeout 10000 --runInBand --verbose --logHeapUsage"
+    "test": "jest --testTimeout 10000 --runInBand --verbose --logHeapUsage --forceExit --detectOpenHandles",
+    "test:docker": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from filebank",
+    "test:build": "docker-compose -f docker-compose.yml -f docker-compose.test.yml build",
+    "format": "npx prettier --write './src/**/*.ts'"
   },
   "dependencies": {
     "ajv": "^6.12.5",

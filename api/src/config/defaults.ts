@@ -1,5 +1,11 @@
 
 export const defaults = {
+  env: {
+    doc: "The application environment.",
+    format: ["development", "test"],
+    default: "development",
+    env: "NODE_ENV"
+  },
   storage: {
     enabled: {
       format: ['filesystem', 's3'],
@@ -40,7 +46,8 @@ export const defaults = {
       },
       endpoint: {
         format: String,
-        default: ''
+        default: 'http://localhost:4566',
+        env: "S3_ENDPOINT"
       }
     },
   },

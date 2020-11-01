@@ -1,7 +1,10 @@
 version: '3.3'
 services:
   filebank:
-    command: npm test
+    command: bash -c "./wait-for-it.sh -t 10 localstack:4566 && npm test"
+    environment:
+      NODE_ENV: test
+      S3_ENDPOINT: http://localstack:4566
 
   mongo:
     ports:

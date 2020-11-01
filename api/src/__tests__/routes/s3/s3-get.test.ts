@@ -1,14 +1,12 @@
 import config from "../../../config/config";
 config.set('storage.enabled', 's3');
-config.set("storage.s3.endpoint", "http://localhost:4566");
-config.set("storage.s3.clientOptions.credentials.accessKeyId", "test");
-config.set("storage.s3.clientOptions.credentials.secretAccessKey", "test");
 
 import { S3Storage } from "../../../transport/s3";
 import { File, Directory } from "../../../models";
 import fs from 'fs';
 import { createDirectory, createFile, truncateS3, expectStatus, getRequest, listRequest, postFileRequest, deleteS3Bucket } from "../../helpers";
 import transportFactory from "../../../transport/factory";
+import * as mongoose from "mongoose";
 
 beforeAll(async () => {
   const s3Storage: S3Storage = transportFactory.getInstance() as S3Storage;
@@ -30,6 +28,7 @@ afterEach(async () => {
 
 afterAll(async () => {
   await deleteS3Bucket();
+  await Promise.all(mongoose.connections.map(conn => conn.close()));
 });
 
 describe('Directory S3 API route GET route', () => {
