@@ -24,6 +24,7 @@ import jwtAuth from "../util/jwt-auth";
 
 import transportFactory from "../transport/factory";
 import { checkRole } from "../middleware/checkRole";
+import { NextFunction } from "express";
 const router: express.Router = express.Router();
 const storage = transportFactory.getInstance();
 const upload = multer();
@@ -79,7 +80,7 @@ router.get(
     authz.enabled ? jwtAuth : nop,
     authz.enabled ? checkRole(_.split(authz.readScope, ",")) : nop
   ],
-  async (req: express.Request, res: express.Response) => {
+  async (req: express.Request, res: express.Response, next: NextFunction) => {
     try {
       const pathObj = await parsePath(req.params[0] || "/", true).populate();
       switch (pathObj.current ? pathObj.current.type : ItemType.Directory) {
@@ -96,7 +97,7 @@ router.get(
       }
     } catch (e) {
       console.error(e);
-      res.status(404).send("Not found.");
+      next(e);
     }
   }
 );
@@ -107,7 +108,7 @@ router.put(
     authz.enabled ? jwtAuth : nop,
     authz.enabled ? checkRole(_.split(authz.writeScope, ",")) : nop
   ],
-  async (req: express.Request, res: express.Response) => {
+  async (req: express.Request, res: express.Response, next: NextFunction) => {
     try {
       const [dir, file] = await Promise.all([
         models.Directory.findById(req.params.id).exec(),
@@ -139,16 +140,8 @@ router.put(
         res.send(file);
       }
     } catch (e) {
-      if (e instanceof NotFoundError) {
-        console.warn(e);
-        res.status(404).json("Not found.");
-      } else if (e instanceof UserInputError) {
-        console.warn(e);
-        res.status(400).json(e.message);
-      } else {
-        console.error(e);
-        res.status(500).json(e.message);
-      }
+      console.error(e);
+      next(e);
     }
   }
 );
@@ -204,7 +197,7 @@ router.post(
           break;
 
         default:
-          throw `Invalid item type: ${req.body.type}`;
+          throw new UserInputError(`Invalid item type: ${req.body.type}`);
       }
     } catch (e) {
       if (e instanceof NotFoundError) {

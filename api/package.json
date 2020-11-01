@@ -5,11 +5,12 @@
   "scripts": {
     "start": "node ./bin/www",
     "build": "rm -rf dist/ && ./node_modules/.bin/tsc",
-    "lint": "./node_modules/.bin/eslint src --ext .ts",
-    "cover": "./node_modules/.bin/nyc npm test",
+    "lint": "eslint src --ext .ts",
+    "coverage": "npm test -- --coverage --watchAll=false",
     "test": "jest --testTimeout 10000 --runInBand --verbose --logHeapUsage --forceExit --detectOpenHandles",
     "test:docker": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from filebank",
     "test:build": "docker-compose -f docker-compose.yml -f docker-compose.test.yml build",
+    "test:deps": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up mongo localstack",
     "format": "npx prettier --write './src/**/*.ts'",
     "typecheck": "tsc --noEmit --project .",
     "before-commit": "npm run format"
@@ -35,6 +36,7 @@
     "validator.ts": "^0.2.2"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/bluebird": "^3.5.32",
     "@types/body-parser": "^1.19.0",
     "@types/convict": "^5.2.1",
@@ -64,23 +66,8 @@
     "source-map-support": "^0.4.18",
     "supertest": "^6.0.0",
     "ts-jest": "^26.4.0",
+    "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
-  },
-  "nyc": {
-    "exclude": [
-      "typings",
-      "coverage"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "reporter": [
-      "json",
-      "html"
-    ],
-    "all": true,
-    "sourceMap": true,
-    "instrument": true
   },
   "husky": {
     "hooks": {
