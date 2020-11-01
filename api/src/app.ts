@@ -1,15 +1,13 @@
-import * as express from 'express';
-import * as cookieParser from 'cookie-parser';
-import * as bodyParser from 'body-parser';
-import * as Promise from 'bluebird';
-import { config } from './config';
-import * as dirs from './routes/directory';
-import morgan = require('morgan');
-import mongoose = require('mongoose');
-
-mongoose.Promise = Promise;
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import config from './config/config';
+import directory from './routes/directory';
+import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 const app: express.Express = express();
+const mongoConfig = config.get("mongo");
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -18,7 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', dirs);
+app.use('/', directory);
 
 // catch 404 and forward to error handler
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -28,7 +26,7 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 });
 
 // error handler
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -38,11 +36,14 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   res.send(res.locals);
 });
 
-mongoose.connect(config.mongoDbUrl, { useNewUrlParser: true }, (err) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
+
+mongoose.connect(mongoConfig.url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => {
+  console.log("Connected to Mongo");
+}).catch((err) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
 });
 
-export = app;
+export { app };

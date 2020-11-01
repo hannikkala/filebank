@@ -1,4 +1,4 @@
-import * as jwt from 'express-jwt';
-import { config } from '../config';
+import jwt from 'express-jwt';
+import config from '../config/config';
 
-export = jwt({ secret: config.jwtKey });
+export default jwt({ secret: config.get("jwtKey"), algorithms: ['HS256'] });

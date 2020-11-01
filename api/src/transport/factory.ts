@@ -1,21 +1,23 @@
 import { FileStorage } from '../index';
-import { config, FilesystemStorageOptions, S3StorageOptions } from '../config';
+import config from '../config/config';
 import { FilesystemStorage } from './filesystem';
-import { S3Storage } from './s3';
+import { S3Storage } from "./s3";
+import { FilesystemStorageOptions } from "../config";
 
-let storage: FileStorage;
+export let storage: FileStorage;
+const storageConfig = config.get("storage");
 
-export = {
+export default {
   getInstance: (): FileStorage => {
     if (storage) return storage;
-    switch (config.storage.enabled) {
+    switch (storageConfig.enabled) {
       case 'filesystem':
-        storage = new FilesystemStorage((config.storage.filesystem as FilesystemStorageOptions).rootDir);
+        storage = new FilesystemStorage((storageConfig.filesystem as FilesystemStorageOptions).rootDir);
         return storage;
       case 's3':
-        storage = new S3Storage((config.storage.s3) as S3StorageOptions);
+        storage = new S3Storage(storageConfig.s3);
         return storage;
     }
-    throw new Error(`Factory method failed. No require for storage ${config.storage.enabled}`);
+    throw new Error(`Factory method failed. No require for storage ${storageConfig.enabled}`);
   },
 };

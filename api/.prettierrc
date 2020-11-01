@@ -1,0 +1,4 @@
+{
+    filepath: './src/**/*.ts',
+    trailingComma: 'none'
+}

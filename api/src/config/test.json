@@ -1,0 +1,12 @@
+{
+  "storage": {
+    "s3": {
+      "clientOptions": {
+        "credentials": {
+          "accessKeyId": "test",
+          "secretAccessKey": "test"
+        }
+      }
+    }
+  }
+}

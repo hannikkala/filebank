@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Filesystem storage returns Promise when creating file failed 1`] = `[Error: ENOENT: no such file or directory, open '/tmp/filebank/nonexist/test.txt']`;
+
+exports[`Filesystem storage returns Promise when error 1`] = `[Error: ENOENT: no such file or directory, mkdir '/tmp/filebank/nonexisting/temp']`;
+
+exports[`Filesystem storage returns Promise when removing directory fails 1`] = `[Error: ENOENT: no such file or directory, scandir '/tmp/filebank/nonexist']`;
