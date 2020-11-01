@@ -1,5 +1,5 @@
-import * as mongoose from 'mongoose';
-import { Directory, File, ItemType } from '../index';
+import * as mongoose from "mongoose";
+import { Directory, File, ItemType } from "../index";
 
 export interface FileModel extends File, mongoose.Document {
   directory: string | Directory;
@@ -8,32 +8,32 @@ export interface FileModel extends File, mongoose.Document {
 const fileSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   refId: {
     type: String,
-    required: true,
+    required: true
   },
   mimetype: {
     type: String,
-    required: true,
+    required: true
   },
   metadata: {
-    type: mongoose.Schema.Types.Mixed,
+    type: mongoose.Schema.Types.Mixed
   },
   directory: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Directory',
+    ref: "Directory"
   },
   type: {
     type: String,
-    default: ItemType.Directory,
+    default: ItemType.Directory
   },
   version: {
     type: Number,
     default: 1,
-    required: true,
-  },
+    required: true
+  }
 });
 
-export const file = mongoose.model<FileModel>('File', fileSchema);
+export const file = mongoose.model<FileModel>("File", fileSchema);

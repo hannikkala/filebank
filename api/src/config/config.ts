@@ -1,5 +1,5 @@
-import convict from 'convict';
-import { defaults } from './defaults';
+import convict from "convict";
+import { defaults } from "./defaults";
 import { existsSync } from "fs";
 
 const config = convict(defaults);

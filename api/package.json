@@ -10,7 +10,9 @@
     "test": "jest --testTimeout 10000 --runInBand --verbose --logHeapUsage --forceExit --detectOpenHandles",
     "test:docker": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from filebank",
     "test:build": "docker-compose -f docker-compose.yml -f docker-compose.test.yml build",
-    "format": "npx prettier --write './src/**/*.ts'"
+    "format": "npx prettier --write './src/**/*.ts'",
+    "typecheck": "tsc --noEmit --project .",
+    "before-commit": "npm run format"
   },
   "dependencies": {
     "ajv": "^6.12.5",
@@ -79,5 +81,16 @@
     "all": true,
     "sourceMap": true,
     "instrument": true
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run before-commit"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,css,json,md}": [
+      "npm run format",
+      "git add"
+    ]
   }
 }

@@ -1,45 +1,54 @@
-import * as _ from 'lodash';
-import { DirectoryModel } from '../models/directory';
-import { FileModel } from '../models/file';
-import * as models from '../models/index';
-import * as DirectoryService from './DirectoryService';
-import isInvalidPath from 'is-invalid-path';
+import * as _ from "lodash";
+import { DirectoryModel } from "../models/directory";
+import { FileModel } from "../models/file";
+import * as models from "../models/index";
+import * as DirectoryService from "./DirectoryService";
+import isInvalidPath from "is-invalid-path";
 
 class Path {
   private allowRoot: boolean;
   private pathProp: string;
   private subTreeProp?: DirectoryModel[];
   private pathPartsProp: string[];
-  private currentProp?: DirectoryModel|FileModel;
+  private currentProp?: DirectoryModel | FileModel;
   private basenameProp: string;
   constructor(path: string, allowRoot: boolean) {
     this.pathProp = path;
     this.allowRoot = allowRoot;
     if (!this.validate()) {
-      throw 'Path not valid';
+      throw "Path not valid";
     }
-    this.pathPartsProp = _.filter((this.pathProp || '').split('/'), part => !_.isEmpty(part));
+    this.pathPartsProp = _.filter(
+      (this.pathProp || "").split("/"),
+      (part) => !_.isEmpty(part)
+    );
     const base = this.pathPartsProp.pop();
     if (!base && !this.allowRoot) {
-      throw 'Path not valid.';
+      throw "Path not valid.";
     }
-    this.basenameProp = base || '';
+    this.basenameProp = base || "";
   }
   validate(): boolean {
-    return !isInvalidPath(this.pathProp) || this.pathProp === '/';
+    return !isInvalidPath(this.pathProp) || this.pathProp === "/";
   }
 
   async populate(): Promise<this> {
     this.subTreeProp = await DirectoryService.buildTree(this.pathPartsProp);
     const currentDir = _.last(this.subTreeProp);
-    const dir = await models.Directory.findOne({ parent: currentDir ? currentDir._id : { $eq: null }, name: this.basenameProp }).exec();
-    const file = await models.File.findOne({ directory: currentDir ? currentDir._id : { $eq: null }, name: this.basenameProp }).exec();
+    const dir = await models.Directory.findOne({
+      parent: currentDir ? currentDir._id : { $eq: null },
+      name: this.basenameProp
+    }).exec();
+    const file = await models.File.findOne({
+      directory: currentDir ? currentDir._id : { $eq: null },
+      name: this.basenameProp
+    }).exec();
     this.currentProp = dir || file || undefined;
     return this;
   }
 
   exists(): boolean {
-    return !!this.currentProp || (this.allowRoot && this.pathProp === '/');
+    return !!this.currentProp || (this.allowRoot && this.pathProp === "/");
   }
 
   get path(): string {
@@ -48,7 +57,7 @@ class Path {
 
   get subTree(): DirectoryModel[] {
     if (!this.subTreeProp) {
-      throw new Error('Subtree is null, please call populate first.');
+      throw new Error("Subtree is null, please call populate first.");
     }
     return this.subTreeProp;
   }
@@ -66,4 +75,5 @@ class Path {
   }
 }
 
-export const parsePath = (path: string, allowRoot: boolean = false): Path => new Path(path, allowRoot);
+export const parsePath = (path: string, allowRoot: boolean = false): Path =>
+  new Path(path, allowRoot);

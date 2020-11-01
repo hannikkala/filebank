@@ -1,15 +1,18 @@
 import config from "../../../config/config";
-config.set('storage.enabled', 's3');
+config.set("storage.enabled", "s3");
 
 import { File, Directory } from "../../../models";
-import transportFactory from '../../../transport/factory';
+import transportFactory from "../../../transport/factory";
 import {
   truncateS3,
-  deleteDirectory, deleteFile,
+  deleteDirectory,
+  deleteFile,
   expectStatus,
-  expectStatus200, fileVerifyS3,
+  expectStatus200,
+  fileVerifyS3,
   postDirectoryRequest,
-  postFileRequest, deleteS3Bucket
+  postFileRequest,
+  deleteS3Bucket
 } from "../../helpers";
 import { S3Storage } from "../../../transport/s3";
 import mongoose from "mongoose";
@@ -17,7 +20,7 @@ import mongoose from "mongoose";
 beforeAll(async () => {
   const s3Storage: S3Storage = transportFactory.getInstance() as S3Storage;
   return new Promise((resolve) => {
-    s3Storage.on('initialized', () => {
+    s3Storage.on("initialized", () => {
       resolve();
     });
   });
@@ -34,45 +37,48 @@ afterEach(async () => {
 
 afterAll(async () => {
   await deleteS3Bucket();
-  await Promise.all(mongoose.connections.map(conn => conn.close()));
+  await Promise.all(mongoose.connections.map((conn) => conn.close()));
 });
 
-describe('Directory S3 API route DELETE route', () => {
-  it('can delete directory on fs root', async () => {
+describe("Directory S3 API route DELETE route", () => {
+  it("can delete directory on fs root", async () => {
     const res = await postDirectoryRequest("/", "deletethis");
     expectStatus200(res);
-    expect(res.body.refId.startsWith('deletethis')).toEqual(true);
-    expect(res.body.type).toEqual('directory');
+    expect(res.body.refId.startsWith("deletethis")).toEqual(true);
+    expect(res.body.type).toEqual("directory");
 
     const res2 = await deleteDirectory("/deletethis");
     expectStatus(res2, 204);
 
-    expect(await fileVerifyS3('deletethis')).toEqual(false);
+    expect(await fileVerifyS3("deletethis")).toEqual(false);
   });
 
-  it('cannot delete non-existing directory', async () => {
+  it("cannot delete non-existing directory", async () => {
     const res2 = await deleteDirectory("/nonexisting");
     expectStatus(res2, 404);
 
-    expect(await fileVerifyS3('nonexisting')).toEqual(false);
+    expect(await fileVerifyS3("nonexisting")).toEqual(false);
   });
 
-  it('can delete file on fs root', async () => {
-    const res = await postFileRequest("/", `${__dirname}/../../resources/64-64.jpg`);
+  it("can delete file on fs root", async () => {
+    const res = await postFileRequest(
+      "/",
+      `${__dirname}/../../resources/64-64.jpg`
+    );
     expectStatus200(res);
 
-    expect(await fileVerifyS3('64-64.jpg')).toEqual(true);
+    expect(await fileVerifyS3("64-64.jpg")).toEqual(true);
 
-    const res2 = await deleteFile('/64-64.jpg');
+    const res2 = await deleteFile("/64-64.jpg");
     expectStatus(res2, 204);
 
-    expect(await fileVerifyS3('64-64.jpg')).toEqual(false);
+    expect(await fileVerifyS3("64-64.jpg")).toEqual(false);
   });
 
-  it('cannot delete non-existing file', async () => {
-    const res = await deleteFile('/nonexisting.jpg');
+  it("cannot delete non-existing file", async () => {
+    const res = await deleteFile("/nonexisting.jpg");
     expectStatus(res, 404);
 
-    expect(await fileVerifyS3('nonexisting.jpg')).toEqual(false);
+    expect(await fileVerifyS3("nonexisting.jpg")).toEqual(false);
   });
 });
