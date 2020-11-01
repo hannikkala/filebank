@@ -8,7 +8,7 @@ import {
 } from "../index";
 import { DeleteObjectsRequest } from "aws-sdk/clients/s3";
 import * as _ from "lodash";
-import { S3StorageOptions } from "../config";
+import { S3StorageOptions } from "../types/index";
 import { EventEmitter } from "events";
 import * as AWS from "aws-sdk";
 import S3 from "aws-sdk/clients/s3";
@@ -157,14 +157,14 @@ export class S3Storage extends EventEmitter implements FileStorage {
         Objects: []
       }
     };
-    const targetPrefix = exists.Contents!.length
+    const targetPrefix = exists.Contents?.length
       ? `${targetRef}${dir.name}/`
       : `${targetRef}`;
     const items: {
       oldItem: Item;
       newItem: Item;
     }[] = await Promise.all(
-      _.map(data.Contents!, async (s3item: S3.Object) => {
+      _.map(data.Contents, async (s3item: S3.Object) => {
         deleteParams.Delete.Objects.push({ Key: s3item.Key! });
         const newKey = s3item.Key!.replace(dir.refId, targetPrefix);
         await this.s3

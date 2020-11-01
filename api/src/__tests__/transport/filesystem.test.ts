@@ -13,8 +13,6 @@ const filesystem = new FilesystemStorage(filesystemstorageroot);
 beforeAll(async () => {
   helpers.deleteFolderRecursive(filesystemstorageroot);
   fs.mkdirSync(filesystemstorageroot);
-
-  filesystem.setRootDir(filesystemstorageroot);
 });
 
 afterAll(async () => {

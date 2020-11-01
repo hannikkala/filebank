@@ -2,7 +2,7 @@ import { FileStorage } from "../index";
 import config from "../config/config";
 import { FilesystemStorage } from "./filesystem";
 import { S3Storage } from "./s3";
-import { FilesystemStorageOptions } from "../config";
+import { FilesystemStorageOptions } from "../types";
 
 export let storage: FileStorage;
 const storageConfig = config.get("storage");

@@ -5,6 +5,7 @@ import config from "./config/config";
 import directory from "./routes/directory";
 import morgan from "morgan";
 import mongoose from "mongoose";
+import { NotFoundError, UserInputError } from "./index";
 
 const app: express.Express = express();
 const mongoConfig = config.get("mongo");
@@ -39,6 +40,11 @@ app.use(
     res.locals.message = err.message;
     res.locals.error = req.app.get("env") === "development" ? err : {};
 
+    if (err instanceof NotFoundError) {
+      return res.status(404).send(res.locals);
+    } else if (err instanceof UserInputError) {
+      return res.status(400).send(res.locals);
+    }
     // render the error page
     res.status(err.status || 500);
     res.send(res.locals);

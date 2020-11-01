@@ -46,25 +46,23 @@ export class FilesystemStorage implements FileStorage {
   async list(id: string): Promise<(Directory | File)[]> {
     const dirPath: string = path.resolve(this.rootDir, id);
     const filenames: string[] = fs.readdirSync(dirPath);
-    const items: (Directory | File)[] = [];
-    filenames.map((filename) => {
+    return filenames.map((filename) => {
       const ref = this.relatify(path.resolve(this.rootDir, id, filename));
       if (fs.statSync(path.resolve(dirPath, filename)).isDirectory()) {
-        items.push({
+        return {
           refId: ref,
           name: filename,
           type: ItemType.Directory
-        });
+        };
       } else {
-        items.push({
+        return {
           refId: ref,
           name: filename,
           mimetype: DEFAULT_MIMETYPE,
           type: ItemType.File
-        });
+        };
       }
     });
-    return items;
   }
 
   async mkdir(dirRef: string, dir: Directory): Promise<Directory> {
@@ -202,12 +200,5 @@ export class FilesystemStorage implements FileStorage {
       },
       items: allItems
     };
-  }
-
-  setRootDir(dir: string) {
-    this.rootDir = dir;
-    if (!fs.existsSync(this.rootDir)) {
-      fs.mkdirSync(this.rootDir);
-    }
   }
 }

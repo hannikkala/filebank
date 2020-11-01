@@ -5,22 +5,22 @@ import { NotFoundError } from "../index";
 export const buildTree = async (
   pathArr: string[]
 ): Promise<DirectoryModel[]> => {
-  const dirPath: DirectoryModel[] = [];
   let parent: DirectoryModel | undefined = undefined;
-  for (const i in pathArr) {
-    const path = pathArr[i];
-    const dir: DirectoryModel | null = await directory
-      .findOne({
-        name: path,
-        parent: !parent ? { $eq: undefined } : parent._id
-      })
-      .exec();
-    if (!dir) {
-      throw new NotFoundError(`Directory ${path} not found.`);
-    }
-    parent = dir;
-    dirPath.push(dir);
-  }
+  const dirPath: DirectoryModel[] = await Promise.all(
+    pathArr.map(async (path) => {
+      const dir: DirectoryModel | null = await directory
+        .findOne({
+          name: path,
+          parent: !parent ? { $eq: undefined } : parent._id
+        })
+        .exec();
+      if (!dir) {
+        throw new NotFoundError(`Directory ${path} not found.`);
+      }
+      parent = dir;
+      return dir;
+    })
+  );
   return dirPath;
 };
 
