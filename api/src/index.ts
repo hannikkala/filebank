@@ -9,25 +9,31 @@ export interface FileStorage {
 
   removeFile(file: File): Promise<void>;
 
-  createFile(file: File, directory: Directory|undefined, data: Buffer): Promise<File>;
+  createFile(
+    file: File,
+    directory: Directory | undefined,
+    data: Buffer
+  ): Promise<File>;
 
   moveFile(item: File, destination: Directory): Promise<File>;
 
-  moveDirectory(dir: Directory, destination: Directory): Promise<MoveDirectoryResponse>;
+  moveDirectory(
+    dir: Directory,
+    destination: Directory
+  ): Promise<MoveDirectoryResponse>;
 }
 
 export type MoveDirectoryResponse = {
   directory: Directory;
-  items:
-    {
-      oldItem: Item;
-      newItem: Item;
-    }[];
-}
+  items: {
+    oldItem: Item;
+    newItem: Item;
+  }[];
+};
 
 export enum ItemType {
-  File = 'file',
-  Directory = 'directory',
+  File = "file",
+  Directory = "directory"
 }
 
 export interface Item {
