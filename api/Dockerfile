@@ -1,4 +1,4 @@
-FROM node:14-slim
+FROM node:lts-slim
 
 RUN mkdir -p /data/app
 WORKDIR /data/app
