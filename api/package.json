@@ -16,7 +16,7 @@
     "before-commit": "npm run format"
   },
   "dependencies": {
-    "ajv": "^6.12.5",
+    "ajv": "^6.12.6",
     "aws-sdk": "^2.761.0",
     "body-parser": "~1.18.3",
     "convict": "^6.0.0",
