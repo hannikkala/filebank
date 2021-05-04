@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Print version number
-      run: cd api && node -p "require('./package.json').version"
     - name: Build the Docker image
       run: cd api && npm run build:docker
     - name: Run tests
       run: cd api && npm run test:docker
+    - name: Tag Docker image
+      run: cd api && docker tag hannikkala/filebank:latest hannikkala/filebank:`node -p "require('./package.json').version"`
