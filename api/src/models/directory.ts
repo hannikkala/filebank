@@ -2,7 +2,6 @@ import * as mongoose from "mongoose";
 import { Directory, ItemType } from "../index";
 
 export interface DirectoryModel extends Directory, mongoose.Document {
-  parent: string | DirectoryModel;
 }
 
 const directorySchema = new mongoose.Schema({
