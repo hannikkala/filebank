@@ -19,7 +19,7 @@ import * as mongoose from "mongoose";
 
 beforeAll(async () => {
   const s3Storage: S3Storage = transportFactory.getInstance() as S3Storage;
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     s3Storage.on("initialized", () => {
       resolve();
     });
