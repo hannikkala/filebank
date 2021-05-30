@@ -57,7 +57,7 @@
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.6.0",
     "clear-require": "^3.0.0",
-    "eslint": "^7.12.1",
+    "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.0.3",
     "jsonwebtoken": "^8.5.1",
