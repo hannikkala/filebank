@@ -36,7 +36,7 @@
     "validator.ts": "^0.2.2"
   },
   "devDependencies": {
-    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/bluebird": "^3.5.35",
     "@types/body-parser": "^1.19.0",
     "@types/convict": "^6.1.1",
