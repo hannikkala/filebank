@@ -48,7 +48,7 @@
     "@types/jest": "^27.4.1",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^8.5.1",
-    "@types/lodash": "^4.14.170",
+    "@types/lodash": "^4.14.191",
     "@types/mongoose": "^5.10.5",
     "@types/morgan": "^1.9.2",
     "@types/multer": "^1.4.5",
